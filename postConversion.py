@@ -9,7 +9,6 @@ from readSettings import ReadSettings
 from autoprocess import plex
 from tvdb_mp4 import Tvdb_mp4
 from mkvtomp4 import MkvtoMp4
-from post_processor import PostProcessor
 from logging.config import fileConfig
 
 fileConfig(os.path.join(os.path.dirname(sys.argv[0]), 'logging.ini'), defaults={'logfilename': os.path.join(os.path.dirname(sys.argv[0]), 'info.log')})
@@ -50,13 +49,7 @@ if len(sys.argv) > 4:
             converter.QTFS(output['output'])
 
         # Copy to additional locations
-        results = converter.replicate(output['output'])
-        output.update(results)
-
-        # run any post process scripts
-        if settings.post_process:
-            post_processor = PostProcessor(output)
-            post_processor.run_scripts()
+        converter.replicate(output['output'])
 
         try:
             refresh = json.load(urllib.urlopen(settings.getRefreshURL(tvdb_id)))
